@@ -1,0 +1,46 @@
+/delete_message
+    1. Người dùng truyền đúng mã phiên đăng nhập và các tham số khác
+    Kết quả mong đợi: 1000 | OK (Thông báo thành công), gửi cho ứng dụng các
+    thông tin cần thiết. Tin nhắn bị xóa sẽ được hệ thống gửi event sang cho 2
+    bên và tin nhắn sẽ biến mất khỏi conversation. Giao diện chat cố tìm tin nhắn
+    để cập nhật hiển thị.
+    // xoá user_id khỏi chat room
+    2. Người dùng gửi sai mã phiên đăng nhập (mã bị trống hoặc quá ngắn hoặc mã
+    phiên đăng nhập cũ).
+    Kết quả mong đợi: ứng dụng sẽ phải đẩy người dùng sang trang đăng nhập.
+    Xem lại test case 3 của change_info_after_signup
+    // middle
+    3. Người dùng truyền đúng mã phiên đăng nhập nhưng hệ thống không thể thiết
+    lập việc xử lý yêu cầu (do lỗi truy cập CSDL chẳng hạn)
+    Kết quả mong đợi: thông báo cho người dùng, chẳng hạn như “Không thể kết
+    nối Internet”
+    message: unknown
+    4. Người dùng truyền đúng mã phiên đăng nhập. Nhưng người dùng đã bị khóa
+    tài khoản (do hệ thống khóa đi).
+    Kết quả mong đợi: ứng dụng sẽ phải đẩy người dùng sang trang đăng nhập.
+    Xem lại test case 3 của change_info_after_signup
+    // middle
+    5. Người dùng truyền đúng mã phiên đăng nhập, và các id khác nhưng hệ thống
+    không thấy id của tin nhắn.
+    Kết quả mong đợi: Hệ thống báo lỗi cho ứng dụng. Ứng dụng vẫn hiện tin
+    nhắn và cho phép hội thoại.
+    // message: params value is invalid or no data or end ...
+    6. Người dùng truyền đúng mã phiên đăng nhập, và các tham số khác nhưng hệ
+    thống phát hiện ra rằng một trong hai phía đã block người kia.
+    Kết quả mong đợi: Ứng dụng vẫn hiện ra cho 2 người rằng vẫn được phép
+    nhắn tin nhưng server không gửi tin nhắn cho cho client. Nếu người dùng gọi
+    API get_conversation thì sẽ nhận được trường is_blocked (nếu bị chặn) hoặc
+    gặp lỗi 9994 (nếu là người chủ động chặn).
+    // ?????????????????????
+    7. Người dùng truyền đúng mã phiên đăng nhập, và message_id cùng partner_id
+    nhưng hệ thống không thấy id của đối tác.
+    Kết quả mong đợi: Hệ thống báo lỗi cho ứng dụng. Ứng dụng vẫn hiện
+    conversation và vẫn cho gửi tin nhắn. Hệ thống nếu không thấy đối tác sẽ
+    không gửi sự kiện đến các bên.
+    // 
+    8. Người dùng truyền đúng mã phiên đăng nhập, và conversation_id nhưng hệ
+    thống không thấy conversation_id.
+    Kết quả mong đợi: hệ thống báo lỗi cho client, client vẫn cho phép hội thoại
+    nhưng lần sau gửi partner_id. Hệ thống căn cứ id của đối tác để gửi sự kiện
+    đến các bên.
+    // no data

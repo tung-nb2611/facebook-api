@@ -1,0 +1,43 @@
+/get_conversation
+    1. Người dùng truyền đúng mã phiên đăng nhập và các tham số khác
+    Kết quả mong đợi: 1000 | OK (Thông báo thành công), gửi cho ứng dụng các
+    thông tin cần thiết. Ứng dụng nên lưu cache lại để đề phòng trường hợp lần
+    sau vào màn chat mà không có mạng. Sau khi thành công thì bắt đầu kết nối
+    chat.
+    //
+    2. Người dùng gửi sai mã phiên đăng nhập (mã bị trống hoặc quá ngắn hoặc mã
+    phiên đăng nhập cũ).
+    Kết quả mong đợi: ứng dụng sẽ phải đẩy người dùng sang trang đăng nhập.
+    //middle xu li 
+    3. Người dùng truyền đúng mã phiên đăng nhập nhưng hệ thống không thể thiết
+    lập việc xử lý yêu cầu (do lỗi truy cập CSDL chẳng hạn)
+    Kết quả mong đợi: thông báo cho người dùng, chẳng hạn như “Không thể kết
+    nối Internet”
+    output:
+    message: unknown
+    4. Người dùng truyền đúng mã phiên đăng nhập. Nhưng người dùng đã bị khóa
+    tài khoản (do hệ thống khóa đi).
+    Kết quả mong đợi: ứng dụng sẽ phải đẩy người dùng sang trang đăng nhập.
+    Xem lại test case 3 của change_info_after_signup
+    // middle xu li 
+    5. Người dùng truyền đúng mã phiên đăng nhập, và các tham số khác nhưng hệ
+    thống không trả về id của đối tác (các output khác hợp lệ).
+    Kết quả mong đợi: Ứng dụng vẫn hiện conversation nhưng hiểu rằng đối tác
+    đã bị khóa hoặc xóa tài khoản.
+    // FE xu li 
+    6. Người dùng truyền đúng mã phiên đăng nhập, và các tham số khác đầy đủ
+    nhưng hệ thống trả về có message/message_id/created của hội thoại không hợp lệ
+    (rỗng hoặc không có).
+    Kết quả mong đợi: những tin nhắn nào không có các trường kia hợp lệ thì
+    mặc định ứng dụng bỏ qua coi như không hiện.
+    // FE xu li 
+    7. Người dùng truyền đúng mã phiên đăng nhập, và các tham số khác nhưng hệ
+    thống không trả về is_blocked (hoặc trong đó trường này bị trống hoặc không
+    đúng định dạng 0 hoặc 1).
+    Kết quả mong đợi: Ứng dụng vẫn hiện nhưng coi như trường này bằng 0.
+    Fe xu li 
+    8. Người dùng truyền đúng mã phiên đăng nhập, và các tham số khác nhưng hệ
+    thống trả về is_blocked = 0.
+    Kết quả mong đợi: Ứng dụng vẫn hiện nhưng người dùng không thể nhắn
+    được tin, cũng như không thể xóa tin nhắn cũ.
+    ???????????????? is_blocked = 1 mới đúng logic

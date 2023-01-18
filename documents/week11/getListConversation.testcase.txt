@@ -1,0 +1,46 @@
+/get_list_conversation
+    1. Người dùng truyền đúng mã phiên đăng nhập và các tham số khác
+    Kết quả mong đợi: 1000 | OK (Thông báo thành công), gửi cho ứng dụng các
+    thông tin cần thiết. Ứng dụng nên lưu cache lại để đề phòng trường hợp lần
+    sau vào màn chat mà không có mạng.
+
+    2. Người dùng gửi sai mã phiên đăng nhập (mã bị trống hoặc quá ngắn hoặc
+    mã phiên đăng nhập cũ).
+    Kết quả mong đợi: ứng dụng sẽ phải đẩy người dùng sang trang đăng nhập.
+    Xem lại test case 3 của change_info_after_signup
+    // middle
+    3. Người dùng truyền đúng mã phiên đăng nhập nhưng hệ thống không thể thiết
+    lập việc xử lý yêu cầu (do lỗi truy cập CSDL chẳng hạn)
+    Kết quả mong đợi: thông báo cho người dùng, chẳng hạn như “Không thể kết
+    nối Internet”
+    message: unknown
+    4. Người dùng truyền đúng mã phiên đăng nhập. Nhưng người dùng đã bị khóa
+    tài khoản (do hệ thống khóa đi).
+    Kết quả mong đợi: ứng dụng sẽ phải đẩy người dùng sang trang đăng nhập.
+    Xem lại test case 3 của change_info_after_signup
+    // middle
+    5. Người dùng truyền đúng mã phiên đăng nhập, và các tham số khác nhưng hệ
+    thống không trả về id của đối tác (các tham số khác hợp lệ).
+    Kết quả mong đợi: Ứng dụng vẫn hiện conversation nhưng hiểu rằng đối tác
+    đã bị khóa hoặc xóa tài khoản.
+    FE xu li 
+    6. Người dùng truyền đúng mã phiên đăng nhập, và các tham số khác đầy đủ
+    nhưng hệ thống trả về có id của hội thoại không hợp lệ.
+    Kết quả mong đợi: những hội thoại nào không có id thì mặc định ứng dụng bỏ
+    qua coi như không hiện.
+    // Fe xu li 
+    7. Người dùng truyền đúng mã phiên đăng nhập, và các tham số khác nhưng hệ
+    thống không trả về LastMessage (hoặc trong đó trường message bị trống hoặc
+    không có) của một hội thoại.
+    Kết quả mong đợi: Ứng dụng vẫn hiện conversation nhưng LastMessage lấy
+    từ cache (nếu có). Nếu không có cache thì ứng dụng đành không hiện.
+    // FE xu li 
+    8. Người dùng truyền đúng mã phiên đăng nhập, và các tham số khác đầy đủ
+    nhưng hệ thống trả về có unread của một hội thoại không hợp lệ.
+    Kết quả mong đợi: Ứng dụng coi như chưa đọc tin nhắn cuối của hội thoại
+    đó.
+    // FE xu li 
+    9. Người dùng truyền đúng mã phiên đăng nhập, và các tham số khác nhưng hệ
+    thống không trả về numNewMessage (hoặc không hợp lệ).
+    Kết quả mong đợi: Ứng dụng coi như giá trị này bằng 0
+    // FE xu li 
