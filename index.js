@@ -38,7 +38,7 @@ const { OK } = require("./src/constants/statusCode.constant.js");
 const Chat = require("./src/models/chat.model.js");
 
 const port = process.env.PORT || 3000;
-const firstParamsRoute = process.env.FIRST_PARAMS_ROUTE || "it4788";
+// const firstParamsRoute = process.env.FIRST_PARAMS_ROUTE || "it4788";
 
 // const app = express();
 app.use(cors());
@@ -71,16 +71,16 @@ app.post("/fileupload", (req, res) => {
   // });
 });
 
-app.use(`/${firstParamsRoute}`, authRoute);
-app.use(`/${firstParamsRoute}`, authMiddleware.isAuth, userRoute);
-app.use(`/${firstParamsRoute}`, authMiddleware.isAuth, postRoute);
-app.use(`/${firstParamsRoute}`, authMiddleware.isAuth, sixRoute);
-app.use(`/${firstParamsRoute}`, authMiddleware.isAuth, sevenRoute);
-app.use(`/${firstParamsRoute}`, authMiddleware.isAuth, eightRoute);
-app.use(`/${firstParamsRoute}`, authMiddleware.isAuth, nineRoute);
-app.use(`/${firstParamsRoute}`, authMiddleware.isAuth, tenRoute);
-app.use(`/${firstParamsRoute}`, authMiddleware.isAuth, elevenRoute);
-app.use(`/${firstParamsRoute}`, authMiddleware.isAuth, bonusRoute);
+app.use(authRoute);
+app.use(authMiddleware.isAuth, userRoute);
+app.use(authMiddleware.isAuth, postRoute);
+app.use(authMiddleware.isAuth, sixRoute);
+app.use(authMiddleware.isAuth, sevenRoute);
+app.use(authMiddleware.isAuth, eightRoute);
+app.use(authMiddleware.isAuth, nineRoute);
+app.use(authMiddleware.isAuth, tenRoute);
+app.use(authMiddleware.isAuth, elevenRoute);
+app.use(authMiddleware.isAuth, bonusRoute);
 
 // test socket
 app.get("/testsocket", (req, res) => {
