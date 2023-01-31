@@ -404,110 +404,115 @@ const reportPost = async (req, res) => {
 };
 
 const like = async (req, res) => {
-  const { id } = req.query;
+  const { id} = req.query;
   const { _id } = req.userDataPass._id;
-
-  try {
-    // tim post theo id
-    var result = await Post.findOne({ _id: id });
-    // neu khong co thi bao loi
-    if (!result) {
-      throw Error("notfound");
-    }
-    // kiem tra post có bị block không
-    if (result.is_blocked) {
-      throw Error("isblocked");
-    }
-    // nếu user đã like
-    if (result.like_list.includes(String(_id))) {
-      // xoá user id khỏi danh sách đã like của post
-      var isLiked = false;
-      await Post.findByIdAndUpdate(id, {
-        $pull: {
-          like_list: _id,
-        },
-        $set: {
-          like: result.like - 1,
-          // is_liked: isLiked
-        },
-      });
-      res.status(200).json({
-        code: statusCode.OK,
-        message: statusMessage.OK,
-        data: {
-          like: result.like - 1,
-          is_liked: isLiked
-        },
-      });
-      
-      
-    } else {
-      // nếu user chưa like thì thêm user id vào danh sách post
-      var isLiked = true;
-      await Post.findByIdAndUpdate(id, {
-        $push: {
-          like_list: _id,
-        },
-        $set: {
-          like: result.like + 1,
-          is_liked: false
-        },
-      });
-      res.status(200).json({
-        code: statusCode.OK,
-        message: statusMessage.OK,
-        data: {
-          like: result.like + 1,
-          is_liked: isLiked
-        },
-      });
-      try {
-        if(result.author==_id){
-          throw Error("khong can thong bao cho mk");
-        }
-        var newNotification = await new Notification({
-          type: "get post",
-          object_id: id,
-          title: req.userDataPass.username+" đã like bài viết cuả bạn",
-          avatar: req.userDataPass.avatar,
-          group: "1",
-          created: Date.now(),
-          // read: "0",
-        }).save();
-        await User.findByIdAndUpdate(result.author,{
-          $push:{
-            notifications: {
-              id: newNotification._id,
-              read: "0"
-            }
+  if(id){
+    try {
+      // tim post theo id
+      var result = await Post.findOne({ _id: id });
+      // neu khong co thi bao loi
+      if (!result) {
+        throw Error("notfound");
+      }
+      // kiem tra post có bị block không
+      if (result.is_blocked) {
+        throw Error("isblocked");
+      }
+      // nếu user đã like
+      if (result.like_list.includes(String(_id))) {
+        // xoá user id khỏi danh sách đã like của post
+        var isLiked = false;
+        await Post.findByIdAndUpdate(id, {
+          $pull: {
+            like_list: _id,
+          },
+          $set: {
+            like: result.like - 1,
+            // is_liked: isLiked
+          },
+        });
+        res.status(200).json({
+          code: statusCode.OK,
+          message: statusMessage.OK,
+          data: {
+            like: result.like - 1,
+            is_liked: isLiked
+          },
+        });
+        
+        
+      } else {
+        // nếu user chưa like thì thêm user id vào danh sách post
+        var isLiked = true;
+        await Post.findByIdAndUpdate(id, {
+          $push: {
+            like_list: _id,
+          },
+          $set: {
+            like: result.like + 1,
+            is_liked: false
+          },
+        });
+        res.status(200).json({
+          code: statusCode.OK,
+          message: statusMessage.OK,
+          data: {
+            like: result.like + 1,
+            is_liked: isLiked
+          },
+        });
+        try {
+          if(result.author==_id){
+            throw Error("khong can thong bao cho mk");
           }
-        })
-      } catch (error) {
-        console.log(error)
+          var newNotification = await new Notification({
+            type: "get post",
+            object_id: id,
+            title: req.userDataPass.username+" đã like bài viết cuả bạn",
+            avatar: req.userDataPass.avatar,
+            group: "1",
+            created: Date.now(),
+            // read: "0",
+          }).save();
+          await User.findByIdAndUpdate(result.author,{
+            $push:{
+              notifications: {
+                id: newNotification._id,
+                read: "0"
+              }
+            }
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+      if (error.message == "isblocked") {
+        return res.status(200).json({
+          code: statusCode.ACTION_HAS_BEEN_DONE_PREVIOUSLY_BY_THIS_USER,
+          message: statusMessage.ACTION_HAS_BEEN_DONE_PREVIOUSLY_BY_THIS_USER,
+        });
+      } else if (error.message == "notfound") {
+        return res.status(200).json({
+          code: statusCode.POST_IS_NOT_EXISTED,
+          message: statusMessage.POST_IS_NOT_EXISTED,
+        });
+      } else {
+        return res.status(200).json({
+          code: statusCode.UNKNOWN_ERROR,
+          message: statusMessage.UNKNOWN_ERROR,
+          server: "loi khong xac dinh",
+        });
       }
     }
-  } catch (error) {
-    console.log(error.message);
-    if (error.message == "isblocked") {
-      return res.status(200).json({
-        code: statusCode.ACTION_HAS_BEEN_DONE_PREVIOUSLY_BY_THIS_USER,
-        message: statusMessage.ACTION_HAS_BEEN_DONE_PREVIOUSLY_BY_THIS_USER,
-        server: "bai viet bi block",
-      });
-    } else if (error.message == "notfound") {
-      return res.status(200).json({
-        code: statusCode.POST_IS_NOT_EXISTED,
-        message: statusMessage.POST_IS_NOT_EXISTED,
-        server: "khong tim thay bai viet",
-      });
-    } else {
-      return res.status(200).json({
-        code: statusCode.UNKNOWN_ERROR,
-        message: statusMessage.UNKNOWN_ERROR,
-        server: "loi khong xac dinh",
-      });
-    }
+  }else{
+    return res.status(200).json({
+      code: statusCode.PARAMETER_IS_NOT_ENOUGHT,
+      message: statusMessage.PARAMETER_IS_NOT_ENOUGHT,
+    });
   }
+  
 };
 
 const getComment = async (req, res) => {

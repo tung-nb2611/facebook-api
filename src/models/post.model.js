@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const postSchema = new mongoose.Schema({
-  described: String,
+  described: {
+    type: String,
+    index: true
+  },
   created: Date,
   modified: Date,
   like: Number,
@@ -40,7 +43,6 @@ const postSchema = new mongoose.Schema({
   // url: String,
   // messages: Array,
 });
-
 const post = mongoose.model("post", postSchema);
 
 module.exports = post;
