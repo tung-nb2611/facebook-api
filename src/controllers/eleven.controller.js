@@ -18,6 +18,33 @@ const statusMessage = require("../constants/statusMessage.constant.js");
 const getConversation = async (req, res) => {
   var { partner_id, conversation_id, index, count } = req.query;
   const { _id } = req.jwtDecoded.data;
+  if (!index || !count) {
+    return res.status(200).json({
+      code: statusCode.PARAMETER_IS_NOT_ENOUGHT,
+      message: statusMessage.PARAMETER_IS_NOT_ENOUGHT,
+    });
+  }
+  try {
+    index = parseInt(index);
+    count = parseInt(count);
+  } catch (e) {
+    return res.status(200).json({
+      code: statusCode.PARAMETER_TYPE_IS_INVALID,
+      message: statusMessage.PARAMETER_TYPE_IS_INVALID,
+    });
+  }
+  if (isNaN(index) || isNaN(count)) {
+    return res.status(200).json({
+      code: statusCode.PARAMETER_TYPE_IS_INVALID,
+      message: statusMessage.PARAMETER_TYPE_IS_INVALID,
+    });
+  }
+  if (index < 0 || count < 0) {
+    return res.status(200).json({
+      code: statusCode.PARAMETER_VALUE_IS_INVALID,
+      message: statusMessage.PARAMETER_VALUE_IS_INVALID,
+    });
+  }
   try {
     if (conversation_id && conversation_id.length > 1) {
       var chatData = await Chat.findById(conversation_id).populate({
@@ -114,9 +141,63 @@ const getConversation = async (req, res) => {
 const getListConversation = async (req, res) => {
   var { index, count } = req.query;
   const { _id } = req.userDataPass;
+  if (!index || !count) {
+    return res.status(200).json({
+      code: statusCode.PARAMETER_IS_NOT_ENOUGHT,
+      message: statusMessage.PARAMETER_IS_NOT_ENOUGHT,
+    });
+  }
+  try {
+    index = parseInt(index);
+    count = parseInt(count);
+  } catch (e) {
+    return res.status(200).json({
+      code: statusCode.PARAMETER_TYPE_IS_INVALID,
+      message: statusMessage.PARAMETER_TYPE_IS_INVALID,
+    });
+  }
+  if (isNaN(index) || isNaN(count)) {
+    return res.status(200).json({
+      code: statusCode.PARAMETER_TYPE_IS_INVALID,
+      message: statusMessage.PARAMETER_TYPE_IS_INVALID,
+    });
+  }
+  if (index < 0 || count < 0) {
+    return res.status(200).json({
+      code: statusCode.PARAMETER_VALUE_IS_INVALID,
+      message: statusMessage.PARAMETER_VALUE_IS_INVALID,
+    });
+  }
   try {
     index = index ? index : 0;
     count = count ? count : 20;
+    if (!index || !count) {
+      return res.status(200).json({
+        code: statusCode.PARAMETER_IS_NOT_ENOUGHT,
+        message: statusMessage.PARAMETER_IS_NOT_ENOUGHT,
+      });
+    }
+    try {
+      index = parseInt(index);
+      count = parseInt(count);
+    } catch (e) {
+      return res.status(200).json({
+        code: statusCode.PARAMETER_TYPE_IS_INVALID,
+        message: statusMessage.PARAMETER_TYPE_IS_INVALID,
+      });
+    }
+    if (isNaN(index) || isNaN(count)) {
+      return res.status(200).json({
+        code: statusCode.PARAMETER_TYPE_IS_INVALID,
+        message: statusMessage.PARAMETER_TYPE_IS_INVALID,
+      });
+    }
+    if (index < 0 || count < 0) {
+      return res.status(200).json({
+        code: statusCode.PARAMETER_VALUE_IS_INVALID,
+        message: statusMessage.PARAMETER_VALUE_IS_INVALID,
+      });
+    }
 
     var userData = await User.findById(_id).populate({
       path: "conversations",
