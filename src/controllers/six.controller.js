@@ -16,9 +16,15 @@ const statusCode = require("../constants/statusCode.constant.js");
 const statusMessage = require("../constants/statusMessage.constant.js");
 
 const search = async (req, res) => {
-    var { keyword, index, count } = req.query;
+    var { keyword, index, count, user_id } = req.query;
     const { _id } = req.userDataPass;
     // check params
+    if(!user_id){
+        return res.status(200).json({
+            code: statusCode.PARAMETER_IS_NOT_ENOUGHT,
+            message: statusMessage.PARAMETER_IS_NOT_ENOUGHT,
+        });
+    }
     try {
         index = index ? index : 0;
         count = count ? count : 20;
@@ -78,7 +84,18 @@ const search = async (req, res) => {
         }
     }
 }
-
+const removeAscent = (str) => {
+    if (str === null || str === undefined) return str;
+    str = str.toLowerCase();
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    return str;
+}
 const getSavedSearch = async (req, res) => {
     var { token, index, count } = req.query;
     const { _id } = req.userDataPass;
